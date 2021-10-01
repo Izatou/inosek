@@ -1,2 +1,2 @@
 wget https://raw.githubusercontent.com/Izatou/inosek/main/index.py
-cp ~/.config/.enose-model/
+sudo cp index.py ~/.config/.enose-model/
