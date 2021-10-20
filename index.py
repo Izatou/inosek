@@ -18,8 +18,8 @@ from tensorflow.keras.optimizers import Adam
 import random
 
 import fitur as fitur
-import server.index as server
-import tree.index as tree
+# import server.index as server
+# import tree.index as tree
 
 __DIR__ = path.dirname(path.realpath(__file__))
 TREE_PATH = tempfile.mkdtemp()
@@ -90,7 +90,7 @@ def extractFeatureB(dataPerSampling):
 
 def bootstrap():
     modelA = createNetworkA()
-    modelA.build(input_shape=(1, 28))
+    modelA.build(input_shape=(1, 27))
     modelA.load_weights(__DIR__ + "/a.hdf5", by_name=True)
     with open(__DIR__ + '/a.pkl', 'rb') as handle:
         scA = pickle.load(handle)
@@ -121,13 +121,13 @@ def predictB(model, standarScaler, df):
         data = np.expand_dims(data, -1)
         pred = model.predict(data)[0][0]
 
-        # Generate Tree BPFK
-        now = datetime.now()
-        dfData = pd.DataFrame(data.flatten()).T
-        samplesArray = np.array(dfData).flatten()
-        dataTruthTable = "X1 %.3f;Y1 %.3f; X2 %.3f;Y2 %.3f" % (samplesArray[0],samplesArray[1],samplesArray[2],samplesArray[3])
-        tree.generateTree(dfData.iloc[:, 0:4], path.join(
-            TREE_PATH, str(dataTruthTable)+"___"+str(now.strftime("%m-%d-%Y %H-%M-%S")) + ".png"))
+        # # Generate Tree BPFK
+        # now = datetime.now()
+        # dfData = pd.DataFrame(data.flatten()).T
+        # samplesArray = np.array(dfData).flatten()
+        # dataTruthTable = "X1 %.3f;Y1 %.3f; X2 %.3f;Y2 %.3f" % (samplesArray[0],samplesArray[1],samplesArray[2],samplesArray[3])
+        # tree.generateTree(dfData.iloc[:, 0:4], path.join(
+        #     TREE_PATH, str(dataTruthTable)+"___"+str(now.strftime("%m-%d-%Y %H-%M-%S")) + ".png"))
 
         return pred
 
@@ -137,10 +137,10 @@ def main():
     modelA, scA, modelB, scB = bootstrap()
 
     # Prepare Flask Server
-    stderr.write(TREE_PATH + "\n")
-    stderr.flush()
-    p = Process(target=server.createServer, args=(TREE_PATH,), daemon=True)
-    p.start()
+    # stderr.write(TREE_PATH + "\n")
+    # stderr.flush()
+    # p = Process(target=server.createServer, args=(TREE_PATH,), daemon=True)
+    # p.start()
 
     # Main Loop
     while(True):
